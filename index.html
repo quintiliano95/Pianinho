@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pianinho Pietro</title>
+    <style>
+        body {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+            background-color: black;
+        }
+
+        img {
+            max-width: 100%;
+            max-height: 100%;
+        }
+    </style>
+</head>
+<body>
+    <img src="pianinho.gif" alt="Sua Imagem">
+<script>
+    const getKeyFrequency = n => Math.pow(2, (n - 49) / 12) * 440;
+const audioCtx = new AudioContext();
+const playing = {};
+
+window.addEventListener('keydown', e => {
+  'qwertyuiopasdfghjklçzxcvbnm'.split('').forEach((k, i) => {
+    if (e.key === k && !playing[k]) {
+      const frequency = getKeyFrequency(30 + i);
+      const oscillator = audioCtx.createOscillator();
+      playing[k] = oscillator;
+      oscillator?.frequency.setValueAtTime(frequency, audioCtx.currentTime);
+      oscillator.connect(audioCtx.destination);
+      oscillator?.frequency.setValueAtTime(frequency, audioCtx.currentTime);
+      oscillator.type = "circle";
+      oscillator.start();
+    }
+  });
+});
+
+window.addEventListener('keyup', e => {
+  const k = e.key;
+
+  const stop = x => {
+    try {
+      playing[x].stop();
+      playing[x].disconnect;
+      playing[x] = false;
+    }catch{}
+  }
+
+  if (e.key === 'n') {
+    Object.keys(playing).forEach(x => stop(x));
+  }
+
+  stop(k);
+});
+
+</script>
+</body>
+</html>
